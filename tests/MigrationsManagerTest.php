@@ -3,8 +3,8 @@ namespace Asgard\Migration\Tests;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase {
 	public function testAddMigration() {
-		\Asgard\Common\FileManager::unlink(__DIR__.'/migrations');
-		\Asgard\Common\FileManager::copy(__DIR__.'/fixtures/migrations', __DIR__.'/migrations');
+		\Asgard\File\FileSystem::delete(__DIR__.'/migrations');
+		\Asgard\File\FileSystem::copy(__DIR__.'/fixtures/migrations', __DIR__.'/migrations');
 		$mm = new \Asgard\Migration\MigrationsManager(__DIR__.'/migrations/');
 		$mm->add(__DIR__.'/fixtures/Migration.php');
 		$this->assertTrue(file_exists(__DIR__.'/migrations/Migration.php'));
@@ -16,8 +16,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testCreateAndRemoveMigration() {
-		\Asgard\Common\FileManager::unlink(__DIR__.'/migrations');
-		\Asgard\Common\FileManager::copy(__DIR__.'/fixtures/migrations', __DIR__.'/migrations');
+		\Asgard\File\FileSystem::delete(__DIR__.'/migrations');
+		\Asgard\File\FileSystem::copy(__DIR__.'/fixtures/migrations', __DIR__.'/migrations');
 		$mm = new \Asgard\Migration\MigrationsManager(__DIR__.'/migrations/');
 		$mm->create('up();', 'down();', 'Amigration');
 		$this->assertTrue(file_exists(__DIR__.'/migrations/Amigration.php'));
@@ -44,8 +44,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testMigrate() {
-		\Asgard\Common\FileManager::unlink(__DIR__.'/migrations');
-		\Asgard\Common\FileManager::copy(__DIR__.'/fixtures/migrations_migrate', __DIR__.'/migrations');
+		\Asgard\File\FileSystem::delete(__DIR__.'/migrations');
+		\Asgard\File\FileSystem::copy(__DIR__.'/fixtures/migrations_migrate', __DIR__.'/migrations');
 		$mm = new \Asgard\Migration\MigrationsManager(__DIR__.'/migrations/');
 		$mm->migrate('Migration', true);
 		$this->assertTrue(\Migration::$migrated);
@@ -58,8 +58,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testMigrateAll() {
-		\Asgard\Common\FileManager::unlink(__DIR__.'/migrations');
-		\Asgard\Common\FileManager::copy(__DIR__.'/fixtures/migrations_all', __DIR__.'/migrations');
+		\Asgard\File\FileSystem::delete(__DIR__.'/migrations');
+		\Asgard\File\FileSystem::copy(__DIR__.'/fixtures/migrations_all', __DIR__.'/migrations');
 		$mm = new \Asgard\Migration\MigrationsManager(__DIR__.'/migrations/');
 		$mm->migrateAll(true);
 
@@ -77,8 +77,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testRollback() {
-		\Asgard\Common\FileManager::unlink(__DIR__.'/migrations');
-		\Asgard\Common\FileManager::copy(__DIR__.'/fixtures/migrations_last', __DIR__.'/migrations');
+		\Asgard\File\FileSystem::delete(__DIR__.'/migrations');
+		\Asgard\File\FileSystem::copy(__DIR__.'/fixtures/migrations_last', __DIR__.'/migrations');
 		$mm = new \Asgard\Migration\MigrationsManager(__DIR__.'/migrations/');
 		$mm->rollback();
 		$this->assertTrue(\MigrationLast::$unmigrated);
@@ -92,8 +92,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testRollbackUntil() {
-		\Asgard\Common\FileManager::unlink(__DIR__.'/migrations');
-		\Asgard\Common\FileManager::copy(__DIR__.'/fixtures/migrations_until', __DIR__.'/migrations');
+		\Asgard\File\FileSystem::delete(__DIR__.'/migrations');
+		\Asgard\File\FileSystem::copy(__DIR__.'/fixtures/migrations_until', __DIR__.'/migrations');
 		$mm = new \Asgard\Migration\MigrationsManager(__DIR__.'/migrations/');
 		$mm->rollbackUntil('MigrationUntil');
 		$this->assertTrue(\MigrationUntil::$unmigrated);
