@@ -1,22 +1,22 @@
 <?php
-namespace Asgard\Migration\Commands;
+namespace Asgard\Migration\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Refresh migrations command.
+ * Migrate command.
  * @author Michel Hognerud <michel@hognerud.com>
  */
-class RefreshCommand extends \Asgard\Console\Command {
+class MigrateCommand extends \Asgard\Console\Command {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected $name = 'migrations:refresh';
+	protected $name = 'migrate';
 	/**
 	 * {@inheritDoc}
 	 */
-	protected $description = 'Reset and re-run all migrations';
+	protected $description = 'Run the migrations';
 	/**
 	 * Migrations directory.
 	 * @var string
@@ -52,9 +52,11 @@ class RefreshCommand extends \Asgard\Console\Command {
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$mm = new \Asgard\Migration\MigrationManager($this->migrationsDir, $this->db, $this->schema, $this->getContainer());
 
-		if($mm->reset())
-			$this->info('Refresh succeded.');
+		if(!$mm->getTracker()->getDownList())
+			$this->output->writeln('Nothing to migrate.');
+		elseif($mm->migrateAll())
+			$this->info('Migration succeded.');
 		else
-			$this->error('Refresh failed.');
+			$this->error('Migration failed.');
 	}
 }
